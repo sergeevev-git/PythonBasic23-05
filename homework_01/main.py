@@ -27,7 +27,6 @@ PRIME = "prime"
 def is_odd(num):
 	return num % 2
 
-
 def is_prime(num):
 	if num <= 1:
 		return False
@@ -48,10 +47,10 @@ def filter_numbers(nums, condition):
 	>>> filter_numbers([2, 3, 4, 5], EVEN)
 	<<< [2, 4]
 	"""
-	if condition == 'odd':
-		return list(filter(is_odd, nums))
-	elif condition == 'even':
-		return list(filterfalse(is_odd, nums))
+	if condition == ODD:
+		return [i for i in nums if i % 2]
+	elif condition == EVEN:
+		return [i for i in nums if i % 2 == 0]
 	else:
 		return list(filter(is_prime, nums))
 
