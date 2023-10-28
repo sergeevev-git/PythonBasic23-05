@@ -8,6 +8,6 @@ RUN poetry config virtualenvs.create false
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --only main
 
-COPY homework_03/ .
+COPY . .
 
 CMD uvicorn main:app --host 0.0.0.0 --port 8000
