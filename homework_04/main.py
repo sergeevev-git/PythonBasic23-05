@@ -82,23 +82,20 @@ async def create_posts(
 
 
 async def async_main():
-	# Base.metadata.create_all(bind = Async_engine)
+	Base.metadata.create_all(bind = async_engine)
+	
 	users_data: List[dict]
 	posts_data: List[dict]
+	
 	users_data, posts_data = await asyncio.gather(
 		fetch_users_data(),
 		fetch_posts_data(),
 	)
-	# print(users_data)
-	# print(posts_data)
+	
 	async with async_session() as session:
 		await create_users(session, users_data)
 		await create_posts(session, posts_data)
-	session.close()
-
-
-# log.info("result: %s", res)
-# log.info("Finish main")
+		session.close()
 
 
 def main():
