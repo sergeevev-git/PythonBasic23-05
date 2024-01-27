@@ -9,20 +9,20 @@
 """
 import os
 
-from sqlalchemy import Column, String, Text, Integer
-from sqlalchemy.orm import DeclarativeBase, relationship
+from sqlalchemy import Column, String, Text, Integer, ForeignKey
+from sqlalchemy.orm import DeclarativeBase, declared_attr, relationship
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, \
 	async_sessionmaker
 
 PG_CONN_URI = os.environ.get(
-	"SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
+	"SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://user:example@localhost/postgres"
 
 async_engine = create_async_engine(
 	url = PG_CONN_URI,
 	echo = True,
 )
 
-async_session = async_sessionmaker(
+Session = async_sessionmaker(
 	bind = async_engine,
 	class_ = AsyncSession,
 	expire_on_commit = False
@@ -33,11 +33,11 @@ async_session = async_sessionmaker(
 # Base = DeclarativeBase()
 
 class Base(DeclarativeBase):
-	# @declared_attr.directive
-	# def __tablename__(cls) -> str:
-	# 	# prefix = config.TABLES_PREFIX
-	# 	# return f"{prefix}{cls.__name__.lower()}s"
-	# 	return f"{cls.__name__.lower()}s"
+	@declared_attr.directive
+	def __tablename__(cls) -> str:
+		# prefix = config.TABLES_PREFIX
+		# return f"{prefix}{cls.__name__.lower()}s"
+		return f"{cls.__name__.lower()}s"
 	
 	id = Column(Integer, primary_key = True)
 
@@ -62,7 +62,12 @@ class Post(Base):
 		default = ""
 	)
 	body = Column(Text, nullable = False, unique = True)
-	user_id = Column(String(120), nullable = True, unique = True)
+	user_id = Column(
+		Integer,
+		ForeignKey("users.id"),
+		unique = False,
+		nullable = False
+	)
 	user = relationship(
 		"User",
 		back_populates = 'posts',

@@ -14,7 +14,7 @@
 """
 import asyncio
 from typing import List
-from models import Base, User, Post, async_session, async_engine
+from models import Base, User, Post, Session, async_engine
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -38,16 +38,16 @@ async def create_users(
 ) -> list[User]:
 	added_users = [
 		User(
-			id = user.id,
-			name = user.name,
-			username = user.username,
-			email = user.email
+			id = user['id'],
+			name = user['name'],
+			username = user['username'],
+			email = user['email']
 		)
 		for user in users
 	]
 	session.add_all(added_users)
 	await session.commit()
-	print("saved users:", added_users)
+	# print("saved users:", added_users)
 	return added_users
 
 
@@ -68,21 +68,30 @@ async def create_posts(
 ) -> list[Post]:
 	added_posts = [
 		Post(
-			id = post.id,
-			name = post.name,
-			username = post.username,
-			email = post.email
+			id = post['id'],
+			title = post['title'],
+			body = post['body'],
+			user_id = post['userId']
 		)
 		for post in posts
 	]
 	session.add_all(added_posts)
 	await session.commit()
-	print("saved posts:", added_posts)
+	# print("saved posts:", added_posts)
 	return added_posts
 
 
+async def main_init_models():
+	async with async_engine.begin() as engine:
+		await engine.run_sync(Base.metadata.drop_all)
+		await engine.run_sync(Base.metadata.create_all)
+
+
+# Base.metadata.create_all(bind = async_engine)
+
+
 async def async_main():
-	Base.metadata.create_all(bind = async_engine)
+	await main_init_models()
 	
 	users_data: List[dict]
 	posts_data: List[dict]
@@ -92,10 +101,17 @@ async def async_main():
 		fetch_posts_data(),
 	)
 	
-	async with async_session() as session:
+	# print(users_data)
+	# print(posts_data)
+	
+	async with Session() as session:
 		await create_users(session, users_data)
 		await create_posts(session, posts_data)
-		session.close()
+		await session.close()
+
+
+# session.flush()
+# session.close()
 
 
 def main():
