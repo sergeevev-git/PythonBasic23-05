@@ -47,7 +47,6 @@ async def create_users(
 	]
 	session.add_all(added_users)
 	await session.commit()
-	# print("saved users:", added_users)
 	return added_users
 
 
@@ -77,7 +76,6 @@ async def create_posts(
 	]
 	session.add_all(added_posts)
 	await session.commit()
-	# print("saved posts:", added_posts)
 	return added_posts
 
 
@@ -85,9 +83,6 @@ async def main_init_models():
 	async with async_engine.begin() as engine:
 		await engine.run_sync(Base.metadata.drop_all)
 		await engine.run_sync(Base.metadata.create_all)
-
-
-# Base.metadata.create_all(bind = async_engine)
 
 
 async def async_main():
@@ -101,17 +96,10 @@ async def async_main():
 		fetch_posts_data(),
 	)
 	
-	# print(users_data)
-	# print(posts_data)
-	
 	async with Session() as session:
 		await create_users(session, users_data)
 		await create_posts(session, posts_data)
 		await session.close()
-
-
-# session.flush()
-# session.close()
 
 
 def main():

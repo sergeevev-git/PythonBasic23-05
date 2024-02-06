@@ -30,8 +30,6 @@ Session = async_sessionmaker(
 )
 
 
-# Base = DeclarativeBase()
-
 class Base(DeclarativeBase):
 	@declared_attr.directive
 	def __tablename__(cls) -> str:
