@@ -7,16 +7,16 @@
 
 
 class MyException(Exception):
-	pass
+    pass
 
 
 class LowFuelError(MyException):
-	pass
+    pass
 
 
 class NotEnoughFuel(MyException):
-	pass
+    pass
 
 
 class CargoOverload(MyException):
-	pass
+    pass

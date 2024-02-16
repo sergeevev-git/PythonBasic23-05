@@ -20,10 +20,10 @@ app = Flask(__name__)
 app.register_blueprint(about_app)
 
 
-@app.route("/", endpoint = "index")
+@app.route("/", endpoint="index")
 def root():
-	return render_template("index.html")
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
-	app.run(debug = True)
+    app.run(debug=True)

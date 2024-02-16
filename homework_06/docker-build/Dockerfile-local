@@ -1,0 +1,18 @@
+FROM python:3.11
+LABEL authors="sev"
+
+WORKDIR /app
+
+RUN pip install --upgrade pip
+
+COPY ../requirements.txt requirements.txt
+
+RUN pip install -r requirements.txt
+
+COPY ./docker-build/entrypoint.sh ./
+
+RUN chmod +x entrypoint.sh
+
+COPY ../shop ./
+
+CMD ["flask", "run", "--host=0.0.0.0"]

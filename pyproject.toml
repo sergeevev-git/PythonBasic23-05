@@ -11,6 +11,11 @@ python = "^3.10"
 fastapi = "^0.104.0"
 uvicorn = { extras = ["standart"], version = "^0.23.2" }
 flask = "^3.0.2"
+black = "^24.2.0"
+flask-sqlalchemy = "^3.1.1"
+flask-migrate = "^4.0.5"
+psycopg = "^3.1.18"
+psycopg-binary = "^3.1.18"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
